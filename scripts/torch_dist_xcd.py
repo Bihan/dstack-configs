@@ -16,8 +16,8 @@ def gpu_matrix_multiplication(rank, world_size, size):
 
     with torch.cuda.device(rank):
         # Dummy matrices per rank
-        a = torch.tensor([[rank + 1.0, rank + 2.0],
-                          [rank + 3.0, rank + 4.0]], device=rank)
+        a = torch.tensor([[1.0, 2.0],
+                          [3.0, 4.0]], device=rank)
         b = torch.tensor([[1.0, 2.0],
                           [3.0, 4.0]], device=rank)
 

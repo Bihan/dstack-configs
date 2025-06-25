@@ -15,16 +15,15 @@ def gpu_matrix_multiplication(rank, world_size, size):
     print(f"[Rank {rank}] Using GPU {rank}")
 
     with torch.cuda.device(rank):
-        # Dummy matrices per rank
         a = torch.tensor([[1.0, 2.0],
                           [3.0, 4.0]], device=rank)
         b = torch.tensor([[1.0, 2.0],
                           [3.0, 4.0]], device=rank)
 
         # Compute matrix product
-        c = torch.mm(a, b)  # Each GPU computes its own version of C
+        c = torch.mm(a, b)
 
-        # Cross-GPU all_reduce (sum all C matrices across GPUs)
+        # Cross-GPU all_reduce
         dist.all_reduce(c, op=dist.ReduceOp.SUM)
 
         # Print after synchronization

@@ -1,0 +1,35 @@
+type: task
+name: open-r1-test
+
+python: 3.12
+
+nvcc: true
+
+# Required environment variables
+env:
+  - HF_TOKEN
+  - WANDB_API_KEY
+  # - HUB_MODEL_ID
+  # - MODEL_ID=meta-llama/Llama-3.1-8B
+  # - ACCELERATE_LOG_LEVEL=info
+# Commands of the task
+commands:
+  - uv pip install vllm==0.8.5.post1 # this will install PyTorch v2.6.0 too.
+  - uv pip install setuptools && uv pip install flash-attn --no-build-isolation
+  - git clone https://github.com/huggingface/open-r1.git
+  - cd open-r1
+  # - GIT_LFS_SKIP_SMUDGE=1 uv pip install -e ".[dev]"
+  - pip install .
+  # - sleep infinity
+  - |
+    accelerate launch --config_file recipes/accelerate_configs/zero3.yaml src/open_r1/sft.py \
+    --config recipes/OpenR1-Distill-7B/sft/config_distill.yaml
+ 
+  
+
+resources:
+  gpu: 80GB:8
+  # shm_size: 128GB
+
+# volumes:
+#   - /checkpoints:/checkpoints

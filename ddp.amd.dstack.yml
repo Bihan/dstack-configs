@@ -1,0 +1,29 @@
+type: task
+name: pytorch-dist-resnet
+
+nodes: 2
+
+image: rocm/pytorch:rocm6.2_ubuntu20.04_py3.9_pytorch_release_2.1.2
+
+env:
+  - NCCL_DEBUG=INFO
+
+commands:
+  - git clone https://github.com/ROCm/rocm-blogs.git
+  - cd blogs/artificial-intelligence/ddp-training-pytorch/src/
+  - mkdir -p data saved_ddp_models
+  - wget https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz -P ./data
+  - cd data
+  - tar -xvzf cifar-100-python.tar.gz
+  - cd ..
+  - |
+    torchrun --nproc_per_node=$DSTACK_GPUS_PER_NODE \
+        --node_rank=$DSTACK_NODE_RANK \
+        --nnodes=$DSTACK_NODES_NUM \
+        --master_addr=$DSTACK_MASTER_NODE_IP \
+        --master_port=8008 ddp-training-pt.py \
+        --num_epochs 20
+
+resources:
+  gpu: MI300X:8
+  shm_size: 24GB

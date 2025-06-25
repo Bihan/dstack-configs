@@ -1,0 +1,18 @@
+type: service
+name: qwen3-30b-a3b
+
+image: lmsysorg/sglang:latest
+env:
+  - MODEL_ID=Qwen/Qwen3-30B-A3B
+
+commands:
+  - python3 -m sglang.launch_server
+        --model-path $MODEL_ID
+        --port 8000
+        --trust-remote-code
+
+port: 8000
+model: Qwen/Qwen3-30B-A3B
+
+resources:
+  gpu: 80GB:1

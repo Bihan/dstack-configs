@@ -1,0 +1,100 @@
+Build verl docker image as described in rocm.blogs
+
+FROM rocm/vllm:rocm6.2_mi300_ubuntu20.04_py3.9_vllm_0.6.4
+
+# Set working directory
+WORKDIR $PWD/app
+
+# Set environment variables
+ENV PYTORCH_ROCM_ARCH="gfx90a;gfx942"
+
+# Install vllm
+RUN pip uninstall -y vllm && \
+    rm -rf vllm && \
+    git clone -b v0.6.3 https://github.com/vllm-project/vllm.git && \
+    cd vllm && \
+    MAX_JOBS=$(nproc) python3 setup.py install && \
+    cd .. && \
+    rm -rf vllm
+
+# Copy the entire project directory
+COPY . .
+
+# Install dependencies
+RUN pip install "tensordict<0.6" --no-deps && \
+    pip install accelerate \
+    codetiming \
+    datasets \
+    dill \
+    hydra-core \
+    liger-kernel \
+    numpy \
+    pandas \
+    peft \
+    "pyarrow>=15.0.0" \
+    pylatexenc \
+    "ray[data,train,tune,serve]" \
+    torchdata \
+    transformers \
+    wandb \
+    orjson \
+    pybind11 && \
+    pip install -e . --no-deps
+
+
+After building the Docker image (verl-rocm) using the provided Dockerfile with the command docker build -t verl-rocm ., you can proceed to the next steps.
+
+
+
+type: task
+name: ray-verl-cluster
+
+nodes: 2
+
+env:
+  # Cluster Network Setting
+  - NCCL_DEBUG=TRACE
+  - GPU_MAX_HW_QUEUES=2
+  - TORCH_NCCL_HIGH_PRIORITY=1
+  - NCCL_CHECKS_DISABLE=1
+  - NCCL_IB_HCA=bnxt_re0,bnxt_re1,bnxt_re2,bnxt_re3,bnxt_re4,bnxt_re5,bnxt_re6,bnxt_re7
+  - NCCL_IB_GID_INDEX=3
+  - NCCL_CROSS_NIC=0
+  - CUDA_DEVICE_MAX_CONNECTIONS=1
+  - NCCL_PROTO=Simple
+  - RCCL_MSCCL_ENABLE=0
+  - TOKENIZERS_PARALLELISM=false
+  - HSA_NO_SCRATCH_RECLAIM=1
+  # For rocm and training script
+  - HIP_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+  - ROCR_VISIBLE_DEVICES=$HIP_VISIBLE_DEVICES
+  - CUDA_VISIBLE_DEVICES=$HIP_VISIBLE_DEVICES
+  # Set data and model path
+  - MODEL_PATH="Qwen/Qwen2-7B-Instruct"
+  - train_files="../data/gsm8k/train.parquet"
+  - test_files="../data/gsm8k/test.parquet"
+
+image: verl-rocm
+commands:
+    - pip install hf_transfer hf_xet
+    - |
+    if [ $DSTACK_NODE_RANK = 0 ]; then
+        python3 examples/data_preprocess/gsm8k.py --local_dir ~/data/gsm8k
+        python3 -c "import transformers; transformers.pipeline('text-generation', model='Qwen/Qwen2-7B-Instruct')"
+        python3 -c "import transformers;transformers.pipeline('text-generation', model='deepseek-ai/deepseek-llm-7b-chat')"
+        ray start --head --port=6379;
+    else
+        ray start --address=$DSTACK_MASTER_NODE_IP:6379
+    fi
+
+# Expose Ray dashboard port
+ports:
+    - 8265
+
+resources:
+  gpu: MI300X:8
+  shm_size: 24GB
+
+# Save checkpoints on the instance
+volumes:
+    - /checkpoints:/checkpoints

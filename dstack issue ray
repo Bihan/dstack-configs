@@ -1,0 +1,24 @@
+dstack ps
+ NAME               BACKEND       RESOURCES                                    PRICE  STATUS   SUBMITTED  
+ ray-verl-cluster                                                                     running  4 mins ago 
+   replica=0 job=0  ssh (remote)  cpu=208 mem=1772GB disk=21388GB H100:80GB:8  $0     running  4 mins ago 
+   replica=0 job=1  ssh (remote)  cpu=208 mem=1772GB disk=21388GB H100:80GB:8  $0     running  4 mins ago 
+dstack attach ray-verl-cluster --job 1
+Traceback (most recent call last):
+  File "/Users/bihan/.pyenv/versions/3.11.0/bin/dstack", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/bihan/.pyenv/versions/3.11.0/lib/python3.11/site-packages/dstack/_internal/cli/main.py", line 87, in main
+    args.func(args)
+  File "/Users/bihan/.pyenv/versions/3.11.0/lib/python3.11/site-packages/dstack/_internal/cli/commands/attach.py", line 74, in _command
+    attached = run.attach(
+               ^^^^^^^^^^^
+  File "/Users/bihan/.pyenv/versions/3.11.0/lib/python3.11/site-packages/dstack/api/_public/runs.py", line 304, in attach
+    self._ports_lock = _reserve_ports(job.job_spec, ports_overrides)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bihan/.pyenv/versions/3.11.0/lib/python3.11/site-packages/dstack/api/_public/runs.py", line 770, in _reserve_ports
+    return PortsLock(ports).acquire()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bihan/.pyenv/versions/3.11.0/lib/python3.11/site-packages/dstack/_internal/core/services/ssh/ports.py", line 34, in acquire
+    raise PortUsedError(f"Port {local_port} is already in use")
+dstack._internal.core.services.ssh.ports.PortUsedError: Port 8265 is already in use

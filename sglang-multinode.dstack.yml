@@ -1,0 +1,36 @@
+type: task
+name: sglang-multi-node
+
+nodes: 2
+
+env:
+- WANDB_API_KEY
+- PYTHONUNBUFFERED=1
+- CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+
+image: nvcr.io/nvidia/pytorch:25.01-py3
+
+commands:
+  - echo "sleep infinity" & sleep infinity
+  - pip install --upgrade pip
+  - pip install "sglang[all]>=0.4.6.post4"
+  - pip install -U huggingface_hub
+  - huggingface-cli download deepseek-ai/DeepSeek-R1
+
+resources:
+  gpu: 80GB:8
+  shm_size: 128GB
+
+# Save checkpoints on the instance
+volumes:
+  - /root/.cache/huggingface/hub:/root/.cache/huggingface/hub
+
+
+
+#node settings.
+export DSTACK_GPUS_NUM=16
+export DSTACK_GPUS_PER_NODE=8
+export DSTACK_MASTER_NODE_IP=172.26.135.50
+export DSTACK_NODES_IPS=172.26.132.120
+export DSTACK_NODES_NUM=2
+export DSTACK_NODE_RANK=1

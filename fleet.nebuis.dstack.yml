@@ -1,0 +1,7 @@
+type: fleet
+name: nebuis-fleet
+nodes: 2
+placement: cluster
+resources:
+  gpu: 80GB:8
+  disk: 500GB

@@ -1,0 +1,30 @@
+type: service
+name: magistral-small
+
+python: "3.12"
+env:
+  # - HF_TOKEN
+  - MODEL_ID=mistralai/Magistral-Small-2506
+  # - MAX_MODEL_LEN=4096
+commands:
+  - pip install vllm
+  - vllm serve $MODEL_ID 
+    --tokenizer_mode mistral 
+    --config_format mistral 
+    --load_format mistral 
+    --tool-call-parser mistral 
+    --enable-auto-tool-choice 
+    --tensor-parallel-size $DSTACK_GPUS_NUM
+port: 8000
+# Register the model
+model: mistralai/Magistral-Small-2506
+
+# Uncomment to leverage spot instances
+#spot_policy: auto
+
+# Uncomment to cache downloaded models
+#volumes:
+#  - /root/.cache/huggingface/hub:/root/.cache/huggingface/hub
+
+resources:
+  gpu: 80GB

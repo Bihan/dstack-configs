@@ -1,0 +1,14 @@
+type: task
+name: test-task
+nvcc: true
+python: 3.12
+#image: dstackai/base-stgn:0.10-devel-ubuntu22.04
+
+commands:
+  - echo "sleep inf" & sleep infinity
+  - uv pip install torch numpy
+  - uv pip install flash-attn --no-build-isolation
+  - python -c "import flash_attn.flash_attn_interface"
+
+resources:
+  gpu: 1

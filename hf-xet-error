@@ -1,0 +1,62 @@
+{"timestamp":"2025-05-22T15:53:04.140144Z","level":"WARN","fields":{"message":"Status Code: 429. Retrying...","request_id":""},"filename":"/home/runner/work/xet-core/xet-core/cas_client/src/http_client.rs","line_number":158}
+{"timestamp":"2025-05-22T15:53:04.140165Z","level":"WARN","fields":{"message":"Retry attempt #4. Sleeping 30.124101901s before the next attempt"},"filename":"/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-retry-0.6.1/src/middleware.rs","line_number":166}
+{"timestamp":"2025-05-22T15:53:04.195214Z","level":"WARN","fields":{"message":"Status Code: 429. Retrying...","request_id":""},"filename":"/home/runner/work/xet-core/xet-core/cas_client/src/http_client.rs","line_number":158}
+{"timestamp":"2025-05-22T15:53:04.195246Z","level":"ERROR","fields":{"message":"error code, error: ReqwestError(reqwest::Error { kind: Status(429) }, \"https://transfer.xethub.hf.co/xorbs/default/5c7aa3f5aee0a9ca3df37d27a0eec7cce482f9f9fe19cae386027a690e8f1651\")","caller":"/home/runner/work/xet-core/xet-core/cas_client/src/download_utils.rs:393"},"filename":"/home/runner/work/xet-core/xet-core/error_printer/src/lib.rs","line_number":28}
+{"timestamp":"2025-05-22T15:53:04.207277Z","level":"WARN","fields":{"message":"Status Code: 429. Retrying...","request_id":""},"filename":"/home/runner/work/xet-core/xet-core/cas_client/src/http_client.rs","line_number":158}
+{"timestamp":"2025-05-22T15:53:04.207289Z","level":"ERROR","fields":{"message":"error code, error: ReqwestError(reqwest::Error { kind: Status(429) }, \"https://transfer.xethub.hf.co/xorbs/default/2ce9c8f894a0e1be3c5fe79fa9494c35a317948a83ddf85c82f2d3a20adc0eba\")","caller":"/home/runner/work/xet-core/xet-core/cas_client/src/download_utils.rs:393"},"filename":"/home/runner/work/xet-core/xet-core/error_printer/src/lib.rs","line_number":28}
+original/consolidated.00.pth: 100%|█████████████████████████████████████████████████████████████████████████████▋| 17.6G/17.6G [00:51<00:00, 338MB/s]
+Traceback (most recent call last):
+  File "/usr/local/bin/huggingface-cli", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/commands/huggingface_cli.py", line 57, in main
+    service.run()
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/commands/download.py", line 153, in run
+    print(self._download())  # Print path to downloaded files
+          ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/commands/download.py", line 187, in _download
+    return snapshot_download(
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/_snapshot_download.py", line 297, in snapshot_download
+    thread_map(
+  File "/usr/local/lib/python3.12/dist-packages/tqdm/contrib/concurrent.py", line 69, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/tqdm/contrib/concurrent.py", line 51, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, chunksize=chunksize), **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/_snapshot_download.py", line 271, in _inner_hf_hub_download
+    return hf_hub_download(
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/file_download.py", line 1008, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/file_download.py", line 1159, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/file_download.py", line 1708, in _download_to_tmp_and_move
+    xet_get(
+  File "/usr/local/lib/python3.12/dist-packages/huggingface_hub/file_download.py", line 627, in xet_get
+    download_files(
+RuntimeError: Data processing error: CAS service error : Error : single flight error: Real call failed: ReqwestError(reqwest::Error { kind: Status(429) }, "https://transfer.xethub.hf.co/xorbs/default/a256414acaa21a141e60a79bbfee041960a740727585f1adce535c91b69162ad")

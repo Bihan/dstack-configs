@@ -1,0 +1,6 @@
+type: fleet
+name: test-fleet
+nodes: 2
+placement: cluster
+resources:
+  gpu: 40GB:1

@@ -11,6 +11,5 @@ ssh_config:
   hosts:
     - hostname: ssh.hotaisle.cloud
       port: 22007
-     
     - hostname: ssh.hotaisle.cloud
       port: 22015

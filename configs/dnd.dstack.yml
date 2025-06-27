@@ -1,0 +1,9 @@
+type: dev-environment
+name: dnd-amd
+
+docker: true
+
+ide: vscode
+
+resources:
+  gpu: MI300X:8

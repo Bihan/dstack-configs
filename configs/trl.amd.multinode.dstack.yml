@@ -1,0 +1,34 @@
+type: task
+name: multinode-amd-vanilla-dstack
+
+nodes: 2
+
+# Mount the system libraries folder from the host
+volumes:
+  - /usr/local/lib:/mnt/lib
+
+image: rocm/dev-ubuntu-22.04:6.4-complete
+env:
+  # - NCCL_DEBUG=INFO
+  - OPEN_MPI_HOME=/usr/lib/x86_64-linux-gnu/openmpi
+commands:
+  # Setup
+  - apt-get update && apt-get install -y -y git libibverbs1 #Contains libibverbs.so.1, required by libbnxt_re-rdmav34.so
+  - pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/rocm6.4 
+  - pip install numpy
+  - git clone https://github.com/Bihan/dstack-configs.git
+  - cd dstack-configs/scripts
+  # Preload the RoCE driver library from the host (for Broadcom driver compatibility)
+  - export LD_PRELOAD=/mnt/lib/libbnxt_re-rdmav34.so
+  - |
+    torchrun \
+      --nproc-per-node=$DSTACK_GPUS_PER_NODE \
+      --node-rank=$DSTACK_NODE_RANK \
+      --nnodes=$DSTACK_NODES_NUM \
+      --master-addr=$DSTACK_MASTER_NODE_IP \
+      --master-port=12345 \
+      multi_node_torch_dist.py
+
+resources:
+  gpu: MI300X:8
+

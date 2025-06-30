@@ -1,0 +1,1 @@
+python3 -c "import torch; print('Torch:', torch.__version__); print('ROCm:', torch.version.hip); print('GPUs:', torch.cuda.device_count())"
